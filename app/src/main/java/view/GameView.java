@@ -19,7 +19,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     // Tile constants
     public final int BASE_TILE_SIZE = 16;
-    private int scaleFactor = 4;
+    private int scaleFactor = 2;
     public final int TILE_SIZE = BASE_TILE_SIZE*scaleFactor;
 
     // World
@@ -51,8 +51,10 @@ public class GameView extends SurfaceView implements Runnable{
             return;
         }
 
-        Player p = new Player(getContext(),250, 250, 25, 25, 5);
-        p.draw(canvas, paint);
+        // Player p = new Player(getContext(),250, 250, 25, 25, 5);
+        // p.draw(canvas, paint);
+
+        this.tileManager.draw(canvas, paint);
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
