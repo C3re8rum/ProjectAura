@@ -13,12 +13,13 @@ import view.GameView;
 public class TileManager {
 
     private Tile[] baseTiles;
-    private int[][] map;
+    private MapFileInterpreter mapFileInterpreter;
     private GameView gameView;
 
     public TileManager(GameView gameView) {
         this.gameView = gameView;
         baseTiles = new Tile[512];
+        mapFileInterpreter = new MapFileInterpreter(gameView);
         initializeTiles();
     }
 
@@ -26,51 +27,52 @@ public class TileManager {
         // The source of the current tileset is this: https://projectalme.itch.io/16x16-rpg-starter-set
         Bitmap tileSet = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.tile_set);
 
-        int gridHeight = 0;
-        int gridWidth = 0;
+        // Image is scaled, for unknown reasons android studio was scaling it up by a factor of 2.625...
+        tileSet = Bitmap.createScaledBitmap(tileSet, (int)(tileSet.getWidth()/2.625), (int)(tileSet.getHeight()/2.625), true);
 
-        for (int i = 0; i < 512; i++){
-            Bitmap tileImage = Bitmap.createBitmap(tileSet,(gridWidth )*gameView.BASE_TILE_SIZE , (gridHeight)* gameView.BASE_TILE_SIZE, gameView.BASE_TILE_SIZE,gameView.BASE_TILE_SIZE );
+        int maxWidth = tileSet.getWidth()/gameView.BASE_TILE_SIZE;
+        int maxHeight = tileSet.getHeight()/gameView.BASE_TILE_SIZE;
+
+        int width = 0;
+        int height = 0;
+        int index = 1;
+
+        while(width < (maxWidth) && height < (maxHeight)){
+
+            Bitmap tileImage = Bitmap.createBitmap(tileSet,(width )*gameView.BASE_TILE_SIZE , (height)* gameView.BASE_TILE_SIZE, gameView.BASE_TILE_SIZE,gameView.BASE_TILE_SIZE );
             tileImage = Bitmap.createScaledBitmap(tileImage, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
-            baseTiles[i] = new Tile(tileImage, false);
-            Log.d("Tile", "Added tile " + i + " to list!");
+            if (index == 1){
+                baseTiles[0] = new Tile(tileImage, false);
+            }
+            baseTiles[index] = new Tile(tileImage, false);
+            Log.d("Tile", "Added tile " + index + " to list!");
 
-            gridWidth++;
-            if (gridWidth == 29){
-                gridWidth = 0;
-                gridHeight++;
+            width++;
+
+            if (width == maxWidth){
+                width = 0;
+                height++;
             }
 
+
+            index++;
         }
 
 
     }
 
 
-    // Add draw method
-
     public void draw(Canvas canvas, Paint paint){
-        /*
-        int gridHeight = 0;
-        int gridWidth = 0;
-
-        for (int i = 0; i < baseTiles.length; i++) {
-            Tile tile = baseTiles[i];
-
-            canvas.drawBitmap(tile.getImage(), gameView.TILE_SIZE*gridWidth, gameView.TILE_SIZE*gridHeight, paint);
-            gridWidth++;
-            if (gridWidth == 29){
-                gridWidth = 0;
-                gridHeight++;
+        for (int i = 0; i < mapFileInterpreter.getMapSize()[0]; i++){
+            for(int k = 0; k < mapFileInterpreter.getMapSize()[0]; k++){
+                int tileNumber = mapFileInterpreter.getCell(i, k);
+               // Log.d("Index", "(" + i + ", " + k + ")");
+               // Log.d("TileNumber ", "" + tileNumber);
+                Bitmap image = baseTiles[tileNumber].getImage();
+                // Log.d("DRAW_CORDS", i*gameView.TILE_SIZE + ", " + k*gameView.TILE_SIZE );
+                canvas.drawBitmap(image, i*gameView.TILE_SIZE, k*gameView.TILE_SIZE, paint);
             }
-
-            Log.i("Draw_Tile", "Tile_" + i + ": (" + gameView.TILE_SIZE*gridWidth + ", " + gameView.TILE_SIZE*gridHeight + ")");
         }
-        */
-        Bitmap tileSet = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.tile_set);
-        System.out.println("Width: " + tileSet.getWidth() + " Height: " + tileSet.getHeight());
-
-        canvas.drawBitmap(tileSet, 0, 0, paint);
 
     }
 }

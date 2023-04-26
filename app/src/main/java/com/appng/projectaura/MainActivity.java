@@ -10,6 +10,8 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
+import java.io.File;
+
 import view.GameView;
 
 public class MainActivity extends Activity {

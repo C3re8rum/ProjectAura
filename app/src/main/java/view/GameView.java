@@ -19,8 +19,11 @@ public class GameView extends SurfaceView implements Runnable{
 
     // Tile constants
     public final int BASE_TILE_SIZE = 16;
-    private int scaleFactor = 2;
+    private int scaleFactor = 4;
     public final int TILE_SIZE = BASE_TILE_SIZE*scaleFactor;
+
+    public final int WORLD_GRID_HEIGHT = 64;
+    public final int WORLD_GRID_WIDTH = 64;
 
     // World
     private TileManager tileManager;
