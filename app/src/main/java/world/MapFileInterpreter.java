@@ -21,17 +21,19 @@ public class MapFileInterpreter {
         this.gameView = gameView;
 
         createMapSize();
-        Log.d("MAP", "Created MapFileInterpreter");
         initializeMap();
+
+        Log.d("MAP", "Created MapFileInterpreter");
     }
-private void createMapSize(){
+
+    private void createMapSize() {
         InputStream mapFileInput = gameView.getContext().getResources().openRawResource(R.raw.maptest);
         Scanner sc = new Scanner(mapFileInput);
 
         int rows = 0;
         int columns = 0;
-        while(sc.hasNextLine()){
-            if (rows == 0){
+        while (sc.hasNextLine()) {
+            if (rows == 0) {
                 String line = sc.nextLine();
                 System.out.println(line);
 
@@ -42,23 +44,23 @@ private void createMapSize(){
             rows++;
         }
         this.map = new int[columns][rows];
-    System.out.println(rows + " " + columns);
-    System.out.println(map.length +  " " + map[0].length);
+        System.out.println(rows + " " + columns);
+        System.out.println(map.length + " " + map[0].length);
     }
 
 
-    public void initializeMap(){
+    public void initializeMap() {
         InputStream mapFileInput = gameView.getContext().getResources().openRawResource(R.raw.maptest);
         Scanner sc = new Scanner(mapFileInput);
 
         int row = 0;
-        while (sc.hasNextLine() && row <= map.length){
+        while (sc.hasNextLine() && row <= map.length) {
             String line = sc.nextLine().trim();
             String[] lineArray = line.split(",");
 
             int[] numberLine = new int[lineArray.length];
             int columnIndex = 0;
-            for (String number: lineArray){
+            for (String number : lineArray) {
                 numberLine[columnIndex++] = Integer.valueOf(number);
             }
 
@@ -70,7 +72,7 @@ private void createMapSize(){
 
     }
 
-    public int[] getMapSize(){
+    public int[] getMapSize() {
         int[] size = new int[2];
         size[0] = map[0].length;
         size[1] = map.length;
@@ -79,7 +81,7 @@ private void createMapSize(){
     }
 
 
-    public int getCell(int column, int row){
+    public int getCell(int column, int row) {
         return this.map[column][row];
     }
 
