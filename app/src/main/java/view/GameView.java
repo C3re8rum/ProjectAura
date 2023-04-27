@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import entity.Player;
+import world.TileManager;
 
 public class GameView extends SurfaceView implements Runnable{
 
@@ -16,10 +17,23 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private Paint paint;
 
+    // Tile constants
+    public final int BASE_TILE_SIZE = 16;
+    private int scaleFactor = 8;
+    public final int TILE_SIZE = BASE_TILE_SIZE*scaleFactor;
+
+    public final int WORLD_GRID_HEIGHT = 64;
+    public final int WORLD_GRID_WIDTH = 64;
+
+    // World
+    private TileManager tileManager;
+
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        tileManager = new TileManager(this);
 
         paintThread = new Thread(this);
         paintThread.start();
@@ -40,9 +54,13 @@ public class GameView extends SurfaceView implements Runnable{
             return;
         }
 
-        Player p = new Player(getContext(),250, 250, 25, 25, 5);
+        this.tileManager.draw(canvas, paint);
+
+        Player p = new Player(this,250, 250, TILE_SIZE, TILE_SIZE, 5);
         p.draw(canvas, paint);
+
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
+
 }
