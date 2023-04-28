@@ -15,12 +15,25 @@
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape"
+            >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <io.github.controlwear.virtual.joystick.android.JoystickView
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                custom:JV_buttonColor="#FF6E40"
+                custom:JV_buttonSizeRatio="15%"
+                custom:JV_borderColor="#00796B"
+                custom:JV_backgroundColor="#009688"
+                custom:JV_borderWidth="4dp"
+                custom:JV_fixedCenter="false"/>
 
             <meta-data
                 android:name="android.app.lib_name"

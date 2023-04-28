@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.appng.projectaura.R;
+
 import entity.Player;
 import world.TileManager;
 
