@@ -63,16 +63,38 @@ public class TileManager {
 
 
     public void draw(Canvas canvas, Paint paint){
-        for (int i = 0; i < mapFileInterpreter.getMapSize()[0]; i++){
-            for(int k = 0; k < mapFileInterpreter.getMapSize()[0]; k++){
-                int tileNumber = mapFileInterpreter.getCell(i, k);
-               // Log.d("Index", "(" + i + ", " + k + ")");
-               // Log.d("TileNumber ", "" + tileNumber);
-                Bitmap image = baseTiles[tileNumber].getImage();
-                // Log.d("DRAW_CORDS", i*gameView.TILE_SIZE + ", " + k*gameView.TILE_SIZE );
-                canvas.drawBitmap(image, i*gameView.TILE_SIZE, k*gameView.TILE_SIZE, paint);
-            }
-        }
 
+        // TODO: Convert to while loop, Check GitHub
+
+        int worldColumn = 0;
+        int worldRow = 0;
+
+        // Log.d("Drawing", "Drawing world");
+        while (worldColumn < gameView.WORLD_GRID_WIDTH && worldRow < gameView.WORLD_GRID_HEIGHT){
+            // A tile's coordinate in the world
+            int worldX = worldColumn*gameView.TILE_SIZE;
+            int worldY = worldRow*gameView.TILE_SIZE;
+
+            // The coordinate at which the tile will be drawn
+            // On the screen
+            int screenX = worldX - gameView.getPlayer().getWorldX() + gameView.getPlayer().getScreenX();
+            int screenY = worldY - gameView.getPlayer().getWorldY() + gameView.getPlayer().getScreenY();
+
+            // Log.d("TILE_CORDS_SCREEN", "X: " + screenX + " Y: " + screenY);
+
+            int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
+
+            Bitmap image = baseTiles[tileNumber].getImage();
+
+            canvas.drawBitmap(image, screenX, screenY, paint);
+
+            worldColumn++;
+            if (worldColumn == gameView.WORLD_GRID_WIDTH) {
+                worldColumn = 0;
+                worldRow++;
+
+            }
+            // Log.i("WORLD", "DRAWING WORLD");
+        }
     }
 }
