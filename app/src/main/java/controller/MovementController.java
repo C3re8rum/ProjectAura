@@ -70,6 +70,10 @@ public class MovementController {
 
             Log.d("CONTROLLER", "LEFT PRESSED");
         }
+
+        if (!touchDown){
+            resetDirections();
+        }
     }
 
 }

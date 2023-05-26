@@ -1,5 +1,7 @@
 package entity;
 
+import static entity.Direction.*;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +29,7 @@ public class Player extends Entity{
 
     private int worldX, worldY;
 
-    public Direction direction = Direction.UP;
+    public Direction direction = UP;
 
     public Player(GameView gameView, int startX, int startY, int width, int height, int movementSpeed) {
         super(startX, startY, width, height);
@@ -65,11 +67,26 @@ public class Player extends Entity{
         this.imageUp1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyup1);
         this.imageUp1 = Bitmap.createScaledBitmap(imageUp1, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
 
-        this.imageUp1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyup2);
+        this.imageUp2 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyup2);
         this.imageUp2 = Bitmap.createScaledBitmap(imageUp2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
 
-        this.imageUp1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyup2);
-        this.imageUp2 = Bitmap.createScaledBitmap(imageUp2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+        this.imageDown1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boydown1);
+        this.imageDown1 = Bitmap.createScaledBitmap(imageDown1, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+
+        this.imageDown2 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boydown2);
+        this.imageDown2 = Bitmap.createScaledBitmap(imageDown2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+
+        this.imageLeft1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyleft1);
+        this.imageLeft1 = Bitmap.createScaledBitmap(imageLeft1, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+
+        this.imageLeft2 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyleft2);
+        this.imageLeft2 = Bitmap.createScaledBitmap(imageLeft2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+
+        this.imageRight1 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyright1);
+        this.imageRight1 = Bitmap.createScaledBitmap(imageRight1, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
+
+        this.imageRight2 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyright2);
+        this.imageRight2 = Bitmap.createScaledBitmap(imageRight2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
 
     }
 
@@ -86,13 +103,22 @@ public class Player extends Entity{
         // Log.d("Player", "Updating");
 
         if ( left || right || up || down ) {
-
-                if (movementController.isLeftPressed()){
+                if (left){
+                    this.direction = Direction.LEFT;
                     this.worldX += -movementSpeed;
                 }
-
-                // Log.i("Player", "Moving");
-
+                if (right){
+                    this.direction = Direction.RIGHT;
+                    this.worldX += movementSpeed;
+                }
+                if (up){
+                    this.direction = Direction.UP;
+                    this.worldY += -movementSpeed;
+                }
+                if (down){
+                    this.direction = Direction.DOWN;
+                    this.worldY += movementSpeed;
+                }
         }
 
 
@@ -102,7 +128,29 @@ public class Player extends Entity{
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.BLUE);
         // canvas.drawRect(this, paint);
-        canvas.drawBitmap(imageUp1, screenX, screenY, paint);
+
+        Bitmap playerImage = null;
+
+        switch (direction){
+            case LEFT:
+                playerImage = this.imageLeft1;
+
+                break;
+            case RIGHT:
+                playerImage = this.imageRight1;
+
+                break;
+            case UP:
+                playerImage = this.imageUp1;
+
+                break;
+            case DOWN:
+                playerImage = this.imageDown1;
+
+                break;
+        }
+
+        canvas.drawBitmap(playerImage, screenX, screenY, paint);
     }
 
 }
