@@ -49,6 +49,7 @@ public class GameView extends SurfaceView implements Runnable{
         paintThread.start();
 
 
+
     }
 
 
