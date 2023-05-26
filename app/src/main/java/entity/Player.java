@@ -100,10 +100,10 @@ public class Player extends Entity{
         boolean up = movementController.isUpPressed();
         boolean down = movementController.isDownPressed();
 
-        // Log.d("Player", "Updating");
-
         if ( left || right || up || down ) {
-                if (left){
+            this.updateSpriteCounter();
+
+            if (left){
                     this.direction = Direction.LEFT;
                     this.worldX += -movementSpeed;
                 }
@@ -133,20 +133,32 @@ public class Player extends Entity{
 
         switch (direction){
             case LEFT:
-                playerImage = this.imageLeft1;
-
+                if (this.getSpriteNumber() == 1){
+                    playerImage = this.imageLeft1;
+                } else if(this.getSpriteNumber() == 2){
+                    playerImage = this.imageLeft2;
+                }
                 break;
             case RIGHT:
-                playerImage = this.imageRight1;
-
+                if (this.getSpriteNumber() == 1){
+                    playerImage = this.imageRight1;
+                } else if(this.getSpriteNumber() == 2){
+                    playerImage = this.imageRight2;
+                }
                 break;
             case UP:
-                playerImage = this.imageUp1;
-
+                if (this.getSpriteNumber() == 1){
+                    playerImage = this.imageUp1;
+                } else if(this.getSpriteNumber() == 2){
+                    playerImage = this.imageUp2;
+                }
                 break;
             case DOWN:
-                playerImage = this.imageDown1;
-
+                if (this.getSpriteNumber() == 1){
+                    playerImage = this.imageDown1;
+                } else if(this.getSpriteNumber() == 2){
+                    playerImage = this.imageDown2;
+                }
                 break;
         }
 

@@ -45,7 +45,7 @@ public class TileManager {
                 baseTiles[0] = new Tile(tileImage, false);
             }
             baseTiles[index] = new Tile(tileImage, false);
-            Log.d("Tile", "Added tile " + index + " to list!");
+            // Log.d("Tile", "Added tile " + index + " to list!");
 
             width++;
 
@@ -58,13 +58,11 @@ public class TileManager {
             index++;
         }
 
-
+        Log.d("Tilemanager", "Tileset initialized");
     }
 
 
     public void draw(Canvas canvas, Paint paint){
-
-        // TODO: Convert to while loop, Check GitHub
 
         int worldColumn = 0;
         int worldRow = 0;
