@@ -25,14 +25,14 @@ public class MovementController {
 
     public MovementController(GameView gameView) {
         this.gameView = gameView;
-        down = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 5.25), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 6.25));
-        up = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 3.5), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 4.5));
-        left = new RectF((float) (gameView.TILE_SIZE * 0.5), (float) (gameView.TILE_SIZE * 4.5), (float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 5.25));
-        right = new RectF((float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 4.5), (float) (gameView.TILE_SIZE * 3.25), (float) (gameView.TILE_SIZE * 5.25));
+        down = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 6.25), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 7.25));
+        up = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 4.5), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 5.5));
+        left = new RectF((float) (gameView.TILE_SIZE * 0.5), (float) (gameView.TILE_SIZE * 5.5), (float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 6.25));
+        right = new RectF((float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 5.5), (float) (gameView.TILE_SIZE * 3.25), (float) (gameView.TILE_SIZE * 6.25));
 
-        horizontalCross = new RectF((float) (gameView.TILE_SIZE * 0.5), (float) (gameView.TILE_SIZE * 4.5), (float) (gameView.TILE_SIZE * 3.25), (float) (gameView.TILE_SIZE * 5.25));
-        leftVerticalCross = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 3.5), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 4.5));
-        rightVerticalCross = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 5.25), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 6.25));
+        horizontalCross = new RectF((float) (gameView.TILE_SIZE * 0.5), (float) (gameView.TILE_SIZE * 5.5), (float) (gameView.TILE_SIZE * 3.25), (float) (gameView.TILE_SIZE * 6.25));
+        leftVerticalCross = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 4.5), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 5.5));
+        rightVerticalCross = new RectF((float) (gameView.TILE_SIZE * 1.5), (float) (gameView.TILE_SIZE * 6.25), (float) (gameView.TILE_SIZE * 2.25), (float) (gameView.TILE_SIZE * 7.25));
 
     }
 

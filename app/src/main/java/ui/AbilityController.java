@@ -13,19 +13,16 @@ import view.GameView;
 
 public class AbilityController {
 
-    private final GameView gameView;
     private final Player player;
 
     private final RectF mainAbility;
 
     public AbilityController(GameView gameView) {
-        this.gameView = gameView;
         this.player = gameView.getPlayer();
 
         int bigRadius = gameView.TILE_SIZE;
         int drawX = MainActivity.getScreenWidth() - gameView.TILE_SIZE*3;
-        int drawY = MainActivity.getScreenHeight() - gameView.TILE_SIZE*4;
-
+        int drawY = MainActivity.getScreenHeight() - (int)(gameView.TILE_SIZE*2.5);
 
         this.mainAbility = new RectF(drawX, drawY, drawX + bigRadius*2, drawY + bigRadius*2);
 

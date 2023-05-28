@@ -49,7 +49,7 @@ public class Player extends Entity{
         initializeImages();
 
         try {
-            this.addAbility(new Firebolt(gameView, "Firebolt", 5, 8));
+            this.addAbility(new Firebolt(gameView, "Firebolt", 20, 4));
         } catch (SpellLevelException e) {
             e.printStackTrace();
         }

@@ -4,30 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menuActivity">
+    tools:context=".MenuActivity">
 
     <Button
         android:id="@+id/btnPlay"
         android:layout_width="320dp"
         android:layout_height="80dp"
-        android:layout_marginStart="204dp"
+        android:layout_marginStart="324dp"
         android:layout_marginTop="156dp"
         android:fontFamily="@font/medievalsharp"
+        android:onClick="startGame"
         android:text="Start game"
+        android:textAlignment="center"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="startGame"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnOptions"
         android:layout_width="320dp"
         android:layout_height="80dp"
-        android:layout_marginStart="204dp"
+        android:layout_marginStart="324dp"
         android:layout_marginTop="236dp"
         android:fontFamily="@font/medievalsharp"
+        android:onClick="goToOptions"
         android:text="Options"
+        android:textAlignment="center"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,10 +38,11 @@
         android:id="@+id/lblTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="212dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/medievalsharp"
         android:text="Project Aura"
+        android:textAlignment="center"
         android:textSize="96sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

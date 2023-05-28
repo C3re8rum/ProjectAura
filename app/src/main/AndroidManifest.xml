@@ -11,14 +11,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Black"
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
         tools:targetApi="31">
         <activity
-            android:name=".menuActivity"
+            android:name=".YouDiedActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".OptionsActivity"
+            android:label="Options"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.appng.projectaura.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MenuActivity"
+            android:label="Menu"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.appng.projectaura.MainActivity" />
         </activity>
         <activity
             android:name=".MainActivity"

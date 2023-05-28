@@ -263,7 +263,7 @@ public class Demon extends Monster {
         int deltaY = playerPoint.y - demonPoint.y;
         // Log.d("DemonDistance", deltaX + " " + deltaY);
 
-        int range = gameView.TILE_SIZE*2;
+        int range = gameView.TILE_SIZE*1;
 
         boolean inRangeLeft = deltaX > -range;
         boolean inRangeRight = deltaX < range;

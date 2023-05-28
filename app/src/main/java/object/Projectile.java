@@ -12,8 +12,8 @@ import view.GameView;
 
 public class Projectile extends RectF implements Runnable {
 
-    private int worldX, worldY;
-    private final int projectileSpeed, angle, damage;
+    private int worldX, worldY, damage;
+    private final int projectileSpeed, angle;
     private final GameView gameView;
     private final Item source;
 
@@ -84,4 +84,9 @@ public class Projectile extends RectF implements Runnable {
     public int getDamage(){
         return this.damage;
     }
+
+    public void projectileUsed(){
+        this.damage = 0;
+    }
+
 }

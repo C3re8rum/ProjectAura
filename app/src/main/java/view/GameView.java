@@ -1,6 +1,8 @@
 package view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -8,6 +10,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.appng.projectaura.YouDiedActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,13 +52,33 @@ public class GameView extends SurfaceView implements Runnable {
     private final ArrayList<Projectile> projectilesToRemove;
     private final ArrayList<Entity> nonPlayerCharacters;
 
-
+    // Options
+    private int difficultyConstant;
+    private SharedPreferences preferences;
+    private String sharedPrefFile =
+            "com.appng.projectaura";
     // Timing
     public static final int FRAME_RATE = 60;
     private int currentFrameRate = FRAME_RATE;
 
-    public GameView(Context context) {
+    // Multi-touch
+    private static final int INVALID_POINTER_ID = -1;
+    private int activePointerId = INVALID_POINTER_ID;
+
+    public GameView(Context context, String difficulty) {
         super(context);
+
+        switch (difficulty) {
+            case "NORMAL":
+                difficultyConstant = 2;
+                break;
+            case "HARD":
+                difficultyConstant = 3;
+                break;
+            default:
+                difficultyConstant = 1;
+        }
+
         this.activeProjectiles = new ArrayList<>();
         this.projectilesToRemove = new ArrayList<>();
         this.nonPlayerCharacters = new ArrayList<>();
@@ -78,23 +102,19 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void initializeMonsters() {
 
-        int numberOfDemons = 5;
+        int numberOfDemons = 4 * difficultyConstant;
         Random rnd = new Random();
         for (int i = 0; i <= numberOfDemons; i++) {
-            //Log.d("Monsters", "Index: " + i);
             int gridX = rnd.nextInt(55) + 1;
             int gridY = rnd.nextInt(55) + 1;
-            int movementSpeed = rnd.nextInt(4) + 1;
-            int level = rnd.nextInt(4) + 1;
+            int movementSpeed = rnd.nextInt(3) + 1;
+            int level = rnd.nextInt(3) + 1;
 
-            Demon demon = new Demon(this, "Demon", 250, TILE_SIZE * gridX, TILE_SIZE * gridY, TILE_SIZE, TILE_SIZE, movementSpeed, level);
+            Demon demon = new Demon(this, "Demon", 100 * difficultyConstant, TILE_SIZE * gridX, TILE_SIZE * gridY, TILE_SIZE, TILE_SIZE, movementSpeed * difficultyConstant, level * difficultyConstant);
 
             addNonPlayerCharacter(demon);
         }
         Log.i("GameView", "Monsters created");
-
-        //Demon demon = new Demon(this, "Demon", 250, TILE_SIZE*36, TILE_SIZE*36, TILE_SIZE, TILE_SIZE, 2,3);
-
 
     }
 
@@ -141,18 +161,18 @@ public class GameView extends SurfaceView implements Runnable {
         handleProjectileCollisions();
         checkForCharacterDeaths();
 
-        // TODO: Add logic for projectiles
-        /*for (Entity entity: nonPlayerCharacters) {
-            entity.update();
-        }*/
-
+        if (player.getCurrentHealth() == 0){
+            paintThread.interrupt();
+            Intent intent = new Intent(getContext(), YouDiedActivity.class);
+            getContext().startActivity(intent);
+        }
 
     }
 
     private void checkForCharacterDeaths() {
         synchronized (nonPlayerCharacters) {
             nonPlayerCharacters.removeIf(entity -> entity.getCurrentHealth() == 0);
-            for (Projectile p: projectilesToRemove) {
+            for (Projectile p : projectilesToRemove) {
                 activeProjectiles.remove(p);
 
             }
@@ -170,9 +190,10 @@ public class GameView extends SurfaceView implements Runnable {
                         String p = "(X: " + projectile.left + "-" + projectile.right + ", Y: " + projectile.top + "-" + projectile.bottom + ")";
                         // Log.d("Collision", "Projectile" + p);
                         if (RectF.intersects(projectile, entity)) {
-                            Log.d("Collision", "Found collision, applying damage");
+                            Log.i("Collision", "Damage dealt: " + projectile.getDamage());
 
                             entity.damage(projectile.getDamage());
+                            projectile.projectileUsed();
                             projectilesToRemove.add(projectile);
                         }
                     }
@@ -249,18 +270,50 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     public boolean onTouchEvent(MotionEvent event) {
-        int touchX = (int) event.getX();
-        int touchY = (int) event.getY();
+        int eventType = event.getActionMasked();
+        boolean touchDown;
 
-        boolean touchDown = true;
+        int touchX, touchY;
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            touchDown = true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            touchDown = false;
+        switch (eventType) {
+            case MotionEvent.ACTION_DOWN:
+                touchX = (int) event.getX();
+                touchY = (int) event.getY();
+                touchDown = true;
+
+                movementController.checkCollision(touchX, touchY, touchDown);
+                abilityController.checkCollision(touchX, touchY, touchDown);
+
+                break;
+            case MotionEvent.ACTION_UP:
+                touchDown = false;
+                touchX = (int) event.getX();
+                touchY = (int) event.getY();
+                movementController.checkCollision(touchX, touchY, touchDown);
+                abilityController.checkCollision(touchX, touchY, touchDown);
+
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                touchDown = true;
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    touchX = (int) event.getX(i);
+                    touchY = (int) event.getY(i);
+                    movementController.checkCollision(touchX, touchY, touchDown);
+                    abilityController.checkCollision(touchX, touchY, touchDown);
+
+                }
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                touchDown = false;
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    touchX = (int) event.getX(i);
+                    touchY = (int) event.getY(i);
+                    movementController.checkCollision(touchX, touchY, touchDown);
+                    abilityController.checkCollision(touchX, touchY, touchDown);
+                }
+                break;
         }
-        movementController.checkCollision(touchX, touchY, touchDown);
-        abilityController.checkCollision(touchX, touchY, touchDown);
+
 
         return true;
     }
