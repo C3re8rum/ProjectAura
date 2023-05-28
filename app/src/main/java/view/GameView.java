@@ -1,7 +1,5 @@
 package view;
 
-import static java.lang.System.currentTimeMillis;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -9,41 +7,42 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import java.util.ArrayList;
 
 import controller.AbilityController;
 import controller.MovementController;
+import entity.Demon;
+import entity.Entity;
 import entity.Player;
-import object.Item;
 import object.Projectile;
 import world.TileManager;
 
 public class GameView extends SurfaceView implements Runnable{
 
     // Graphics components
-    private Thread paintThread;
+    private final Thread paintThread;
     private SurfaceHolder surfaceHolder;
     private Canvas canvas;
-    private Paint paint;
+    private final Paint paint;
 
     // User interface
-    private MovementController movementController;
-    private AbilityController abilityController;
+    private final MovementController movementController;
+    private final AbilityController abilityController;
 
     // Tile constants
     public final int BASE_TILE_SIZE = 16;
-    private int scaleFactor = 8;
+    private final int scaleFactor = 8;
     public final int TILE_SIZE = BASE_TILE_SIZE*scaleFactor;
 
     public final int WORLD_GRID_HEIGHT = 64;
     public final int WORLD_GRID_WIDTH = 64;
 
     // World
-    private TileManager tileManager;
-    private Player player;
+    private final TileManager tileManager;
+    private final Player player;
     private ArrayList<Projectile> activeProjectiles;
+    private ArrayList<Entity> nonPlayerCharacters;
 
 
     // Timing
@@ -53,21 +52,28 @@ public class GameView extends SurfaceView implements Runnable{
     public GameView(Context context) {
         super(context);
         this.activeProjectiles = new ArrayList<>();
+        this.nonPlayerCharacters = new ArrayList<>();
 
         this.movementController = new MovementController(this);
 
         this.player = new Player(this,TILE_SIZE*32, TILE_SIZE*32, TILE_SIZE, TILE_SIZE, 6);
-
+        
         surfaceHolder = getHolder();
         paint = new Paint();
-
         tileManager = new TileManager(this);
+        
+        initializeMonsters();
 
         this.abilityController = new AbilityController(this);
 
         paintThread = new Thread(this);
         paintThread.start();
+        
+    }
 
+    private void initializeMonsters() {
+        Demon demon = new Demon(this, "Demon", 250, TILE_SIZE*40, TILE_SIZE*40, TILE_SIZE, TILE_SIZE, 10);
+        addNonPlayerCharacter(demon);
     }
 
     @Override
@@ -112,12 +118,14 @@ public class GameView extends SurfaceView implements Runnable{
         removeOutOfBoundsProjectiles();
 
         // TODO: Add logic for projectiles
+        for (Entity entity: nonPlayerCharacters) {
+            entity.update();
+        }
 
 
     }
 
     private void removeOutOfBoundsProjectiles() {
-
         activeProjectiles.removeIf(projectile -> projectile.right < 0 || projectile.left > TILE_SIZE*WORLD_GRID_WIDTH
         || projectile.bottom < 0 || projectile.top > TILE_SIZE*WORLD_GRID_HEIGHT);
 
@@ -125,6 +133,10 @@ public class GameView extends SurfaceView implements Runnable{
 
     public void addProjectile(Projectile projectile){
         this.activeProjectiles.add(projectile);
+    }
+
+    public void addNonPlayerCharacter(Entity entity){
+        nonPlayerCharacters.add(entity);
     }
 
     public int getCurrentFrameRate() {
@@ -155,7 +167,9 @@ public class GameView extends SurfaceView implements Runnable{
 
         for (Projectile projectile: this.activeProjectiles) {
             projectile.draw(canvas, paint);
-
+        }
+        for (Entity entity: nonPlayerCharacters) {
+            entity.draw(canvas, paint);
         }
 
         this.player.draw(canvas, paint);

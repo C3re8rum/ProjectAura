@@ -1,8 +1,5 @@
 package entity;
 
-import static entity.Direction.*;
-
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,8 +11,6 @@ import android.util.Log;
 import com.appng.projectaura.MainActivity;
 import com.appng.projectaura.R;
 
-import java.util.ArrayList;
-
 import controller.MovementController;
 import exceptions.SpellLevelException;
 import object.Firebolt;
@@ -24,20 +19,20 @@ import view.GameView;
 
 public class Player extends Entity{
 
-    private GameView gameView;
+    private final GameView gameView;
 
     // Movement
-    private MovementController movementController;
+    private final MovementController movementController;
 
     // Graphics
     private Bitmap imageUp1, imageUp2, imageLeft1, imageLeft2, imageRight1, imageRight2, imageDown1, imageDown2;
-    private int screenX = 0;
-    private int screenY = 0;
+    private final int screenX;
+    private final int screenY;
 
     // Combat
-    private int maxHealth = 100;
+    private final int maxHealth = 100;
     private int currentHealth = maxHealth;
-    private Item[] abilities;
+    private final Item[] abilities;
     private final static int globalCoolDownMilliSeconds = 500;
     private long timeSinceLastUsedAbility = 0;
 
@@ -137,6 +132,7 @@ public class Player extends Entity{
 
     }
 
+    @Override
     public void update(){
         if (movementController == null) {
             return;
@@ -154,8 +150,8 @@ public class Player extends Entity{
 
             if (left){
                     this.direction = Direction.LEFT;
-                    this.left += -this.getMovementSpeed();
-                    this.right += -this.getMovementSpeed();
+                    this.left -= this.getMovementSpeed();
+                    this.right -= this.getMovementSpeed();
             }
                 if (right){
                     this.direction = Direction.RIGHT;
@@ -165,8 +161,8 @@ public class Player extends Entity{
                 }
                 if (up){
                     this.direction = Direction.UP;
-                    this.top += -this.getMovementSpeed();
-                    this.bottom += -this.getMovementSpeed();
+                    this.top -= this.getMovementSpeed();
+                    this.bottom -= this.getMovementSpeed();
                 }
                 if (down){
                     this.direction = Direction.DOWN;

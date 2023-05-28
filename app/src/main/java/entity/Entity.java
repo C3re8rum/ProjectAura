@@ -10,7 +10,7 @@ public abstract class Entity extends RectF {
 
     private int spriteCounter = 0;
     private int spriteNumber = 1;
-    private final int spriteInterval = 12;
+    private final int spriteInterval = 24;
 
     private int movementSpeed;
     public Direction direction = UP;
@@ -41,6 +41,12 @@ public abstract class Entity extends RectF {
     public void updateSpriteCounter(){
         this.spriteCounter++;
 
+        if (this instanceof Player){
+
+            // Demons need 24 animation states, players only 2
+            this.spriteCounter++;
+        }
+
         if (this.spriteCounter == spriteInterval){
             if (this.spriteNumber == 1){
                 this.spriteNumber = 2;
@@ -50,4 +56,6 @@ public abstract class Entity extends RectF {
             this.spriteCounter = 0;
         }
     }
+
+    public abstract void update();
 }
