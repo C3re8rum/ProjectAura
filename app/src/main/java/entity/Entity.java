@@ -5,6 +5,7 @@ import static entity.Direction.UP;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 public abstract class Entity extends RectF {
 
@@ -16,10 +17,10 @@ public abstract class Entity extends RectF {
     public Direction direction = UP;
 
     public Entity(int startX, int startY, int width, int height, int movementSpeed) {
-        this.left = startX - width/2;
-        this.right = startX + width/2;
-        this.top = startY + height/2;
-        this.bottom = startY - height/2;
+        this.left = startX - (float) (width/2);
+        this.right = startX + (float)( width/2);
+        this.top = startY + (float) (height/2);
+        this.bottom = startY - (float)(height/2);
 
         this.movementSpeed = movementSpeed;
     }
@@ -42,7 +43,6 @@ public abstract class Entity extends RectF {
         this.spriteCounter++;
 
         if (this instanceof Player){
-
             // Demons need 24 animation states, players only 2
             this.spriteCounter++;
         }
@@ -58,4 +58,25 @@ public abstract class Entity extends RectF {
     }
 
     public abstract void update();
+
+    public void updatePosition(){
+        switch (direction){
+            case LEFT:
+                this.left -= this.getMovementSpeed();
+                this.right -= this.getMovementSpeed();
+                break;
+            case RIGHT:
+                this.left += this.getMovementSpeed();
+                this.right += this.getMovementSpeed();
+                break;
+            case UP:
+                this.top -= this.getMovementSpeed();
+                this.bottom -= this.getMovementSpeed();
+                break;
+            case DOWN:
+                this.top += this.getMovementSpeed();
+                this.bottom += this.getMovementSpeed();
+                break;
+        }
+    }
 }

@@ -138,41 +138,31 @@ public class Player extends Entity{
             return;
         }
 
+        if (movementController.isDownPressed() || movementController.isLeftPressed() || movementController.isRightPressed() || movementController.isUpPressed()){
+            this.updateSpriteCounter();
+            this.updateDirection();
+            this.updatePosition();
+
+        }
+
+
+    }
+
+    private void updateDirection() {
         boolean left = movementController.isLeftPressed();
         boolean right = movementController.isRightPressed();
         boolean up = movementController.isUpPressed();
         boolean down = movementController.isDownPressed();
 
-        Log.d("PlayerMovement", left + " " + right + " " + " " + up + " " + down);
-
-        if ( left || right || up || down ) {
-            this.updateSpriteCounter();
-
-            if (left){
-                    this.direction = Direction.LEFT;
-                    this.left -= this.getMovementSpeed();
-                    this.right -= this.getMovementSpeed();
-            }
-                if (right){
-                    this.direction = Direction.RIGHT;
-                    this.left += this.getMovementSpeed();
-                    this.right += this.getMovementSpeed();
-
-                }
-                if (up){
-                    this.direction = Direction.UP;
-                    this.top -= this.getMovementSpeed();
-                    this.bottom -= this.getMovementSpeed();
-                }
-                if (down){
-                    this.direction = Direction.DOWN;
-                    this.top += this.getMovementSpeed();
-                    this.bottom += this.getMovementSpeed();
-                }
-
-                Log.i("Player", "Moving " + direction);
+        if (left){
+            direction = Direction.LEFT;
+        } else if (right){
+            direction = Direction.RIGHT;
+        } else if (up) {
+            direction = Direction.UP;
+        } else if (down){
+            direction = Direction.DOWN;
         }
-
 
     }
 

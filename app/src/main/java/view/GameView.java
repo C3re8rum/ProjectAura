@@ -41,8 +41,8 @@ public class GameView extends SurfaceView implements Runnable{
     // World
     private final TileManager tileManager;
     private final Player player;
-    private ArrayList<Projectile> activeProjectiles;
-    private ArrayList<Entity> nonPlayerCharacters;
+    private final ArrayList<Projectile> activeProjectiles;
+    private final ArrayList<Entity> nonPlayerCharacters;
 
 
     // Timing
@@ -72,7 +72,7 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void initializeMonsters() {
-        Demon demon = new Demon(this, "Demon", 250, TILE_SIZE*40, TILE_SIZE*40, TILE_SIZE, TILE_SIZE, 10);
+        Demon demon = new Demon(this, "Demon", 250, TILE_SIZE*40, TILE_SIZE*40, TILE_SIZE, TILE_SIZE, 2);
         addNonPlayerCharacter(demon);
     }
 
