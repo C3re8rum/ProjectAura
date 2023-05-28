@@ -3,8 +3,10 @@ package entity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.appng.projectaura.R;
@@ -120,7 +122,32 @@ public class Demon extends Monster {
         Point drawCoordinates = gameView.getPlayer().getPositionRelativeToPlayer((int) this.left, (int) this.top);
         // Log.d("Demon", "X: " + drawCoordinates.x + " Y: " + drawCoordinates.y);
         // Maybe needs to optimise if outside of screen, shouldn't be needed
+
+        Log.d("Demon", "DrawCords: " + drawCoordinates.toString());
+
         canvas.drawBitmap(currentImage, drawCoordinates.x, drawCoordinates.y, paint);
+
+        // Health bar
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(2);
+        paint.setStyle(Paint.Style.STROKE);
+
+        RectF healthBar = new RectF(drawCoordinates.x, drawCoordinates.y, drawCoordinates.x + this.width(), drawCoordinates.y + this.height()/5);
+        healthBar.top += (float) gameView.TILE_SIZE/3;
+        healthBar.bottom += (float)gameView.TILE_SIZE/3;
+        healthBar.left += (float)gameView.TILE_SIZE/2;
+        healthBar.right += (float)gameView.TILE_SIZE/2;
+
+        canvas.drawRect(healthBar, paint);
+
+        double widthPercentage = (double)getCurrentHealth()/ (double) getMaxHealth();
+
+        healthBar.right -= healthBar.width()*widthPercentage;
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.RED);
+        canvas.drawRect(healthBar, paint);
+
     }
 
     @Override
@@ -129,16 +156,14 @@ public class Demon extends Monster {
 
         long currentTime = System.currentTimeMillis();
 
-        Log.d("Demon", "" + (currentTime-lastMoveTime));
+        // Log.d("Demon", "" + (currentTime-lastMoveTime));
 
         if (currentTime - lastMoveTime > timeBetweenMovesMilliSeconds){
             generateNextMove();
             lastMoveTime = currentTime;
         }
 
-
-
-        this.updatePosition();
+        // this.updatePosition();
         }
 
     private void generateNextMove() {
@@ -147,6 +172,7 @@ public class Demon extends Monster {
         // TODO: Implement logic to move towards player
         // Just an estimation, calculating distance between rectangles is a bit complicated
         double playerDistance = Math.sqrt(Math.pow(drawCoordinates.x - this.left, 2) + Math.pow(drawCoordinates.y - this.top, 2));
+        // Log.d("Demon", "" + playerDistance);
 
         // TODO: Implement enemy moving
 
