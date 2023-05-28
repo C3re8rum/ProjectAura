@@ -16,12 +16,12 @@ import view.GameView;
 public class Firebolt extends Spell{
 
     // Magic constants
-    private int projectileSpeed;
+    private final int projectileSpeed;
     private static final int DAMAGE_CONSTANT = 20;
 
     private Bitmap image;
 
-    private GameView gameView;
+    private final GameView gameView;
 
     // TODO: Make it so you can shoot multiple fireballs
     // Maybe make general placeholder projectile that takes in speed, image and damage?
@@ -72,9 +72,13 @@ public class Firebolt extends Spell{
 
         Log.d("Firebolt", "Activated");
 
-        Projectile projectile = new Projectile(gameView, this, (int) gameView.getPlayer().left-gameView.TILE_SIZE/2, (int) gameView.getPlayer().top+gameView.TILE_SIZE/2, this.projectileSpeed, angle, getDamage());
-        gameView.addProjectile(projectile);
+        Projectile projectile = new Projectile(gameView, this, gameView.getPlayer().getWorldX(), gameView.getPlayer().getWorldY(), this.projectileSpeed, angle, getDamage());
 
+        synchronized (gameView.getActiveProjectiles()){
+
+            gameView.addProjectile(projectile);
+
+        }
     }
 
     @Override

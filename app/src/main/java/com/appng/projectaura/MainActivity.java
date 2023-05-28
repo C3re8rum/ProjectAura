@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         Log.i("SCREEN", "Width: " + getScreenWidth() + " Height: " + getScreenHeight());
 
         this.setContentView(gameView);
-        this.playBackgroundmusic(gameView);
+        // this.playBackgroundmusic(gameView);
     }
 
     public static int getScreenWidth(){

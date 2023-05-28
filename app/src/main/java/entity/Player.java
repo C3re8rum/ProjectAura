@@ -6,12 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.appng.projectaura.MainActivity;
 import com.appng.projectaura.R;
 
-import controller.MovementController;
+import ui.MovementController;
 import exceptions.SpellLevelException;
 import object.Firebolt;
 import object.Item;
@@ -30,15 +31,13 @@ public class Player extends Entity{
     private final int screenY;
 
     // Combat
-    private final int maxHealth = 100;
-    private int currentHealth = maxHealth;
     private final Item[] abilities;
-    private final static int globalCoolDownMilliSeconds = 500;
+    private final static int globalCoolDownMilliSeconds = 1000;
     private long timeSinceLastUsedAbility = 0;
 
 
-    public Player(GameView gameView, int startX, int startY, int width, int height, int movementSpeed) {
-        super(startX, startY, width, height, movementSpeed);
+    public Player(GameView gameView, int maxHealth, int startX, int startY, int width, int height, int movementSpeed) {
+        super(startX, startY, width, height, movementSpeed, maxHealth);
 
         this.gameView = gameView;
         this.movementController = gameView.getMovementController();
@@ -50,7 +49,7 @@ public class Player extends Entity{
         initializeImages();
 
         try {
-            this.addAbility(new Firebolt(gameView, "Firebolt", 5, 3));
+            this.addAbility(new Firebolt(gameView, "Firebolt", 5, 8));
         } catch (SpellLevelException e) {
             e.printStackTrace();
         }
@@ -173,6 +172,43 @@ public class Player extends Entity{
         return new Point(objectScreenX, objectScreenY);
     }
 
+    public double angleToPlayer(RectF object) {
+        Point objectDrawPoint = getPositionRelativeToPlayer((int) object.left, (int) object.top);
+
+        float distanceX = (screenX + gameView.TILE_SIZE / 2) - (objectDrawPoint.x + this.width());
+        // negative to revert the y axis for correct mathematical coordinate system
+        float distanceY = -((screenY + gameView.TILE_SIZE / 2) - (objectDrawPoint.y - this.height()));
+
+        double angleRadians = Math.atan(distanceY / distanceX);
+
+        Log.d("DemonDistance", distanceX + " " + distanceY);
+        double angleDegrees = (angleRadians * ((double) 180 / Math.PI));
+
+        // Positive x and positive y => 0 < angle < 90
+        // Negative x and positive y => 90 < angle < 180
+        // Negative x and negative y => -180 < angle < -90
+        // Positive x and negative y => -90 < angle < 0
+
+        // Arctan can only result in results from -90->+90 degrees
+
+        // 2nd quadrant
+        if (distanceX < 0 && distanceY > 0) {
+            angleDegrees += 180;
+        }
+        // 3rd quadrant
+        if (distanceX < 0 && distanceY < 0) {
+            angleDegrees += 180;
+        }
+        // 4th quadrant
+        if (distanceX > 0 && distanceY < 0) {
+            angleDegrees += 360;
+        }
+
+
+        return angleDegrees;
+    }
+
+
     @Override
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.BLUE);
@@ -214,4 +250,8 @@ public class Player extends Entity{
         canvas.drawBitmap(playerImage, screenX, screenY, paint);
     }
 
+    @Override
+    public void run() {
+
+    }
 }

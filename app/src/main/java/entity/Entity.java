@@ -5,25 +5,61 @@ import static entity.Direction.UP;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.Log;
 
-public abstract class Entity extends RectF {
+public abstract class Entity extends RectF implements Runnable{
 
     private int spriteCounter = 0;
     private int spriteNumber = 1;
     private final int spriteInterval = 24;
 
-    private int movementSpeed;
+    private int currentHealth;
+    private final int maxHealth;
+
+    private final int movementSpeed;
     public Direction direction = UP;
 
-    public Entity(int startX, int startY, int width, int height, int movementSpeed) {
-        this.left = startX - (float) (width/2);
-        this.right = startX + (float)( width/2);
-        this.top = startY + (float) (height/2);
-        this.bottom = startY - (float)(height/2);
+    public Entity(int startX, int startY, int width, int height, int movementSpeed, int maxHealth) {
+        this.left = startX + ((float)width/2);
+        this.right = startX + ((float)width*3/2);
+        this.top = startY + ((float)height/2);
+        this.bottom = startY + ((float)height*3/2);
+
+        this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
 
         this.movementSpeed = movementSpeed;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public Point getMiddle(){
+        int x = (int) (this.left + this.width());
+        int y = (int) (this.top + this.height());
+        return new Point(x, y);
+    }
+
+    public void heal(int amount){
+        currentHealth += amount;
+        if (currentHealth > maxHealth){
+            currentHealth = maxHealth;
+        }
+    }
+
+    public void damage(int amount){
+        currentHealth -= amount;
+        if (currentHealth < 0){
+            currentHealth = 0;
+        }
+        Log.i("Entity", "Health: " + currentHealth);
     }
 
     public int getMovementSpeed() {
@@ -34,6 +70,10 @@ public abstract class Entity extends RectF {
 
     public int getSpriteCounter() {
         return spriteCounter;
+    }
+
+    public void resetSpriteCounter(){
+        spriteCounter = 0;
     }
 
     public int getSpriteNumber() {

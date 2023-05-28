@@ -1,6 +1,5 @@
-package controller;
+package ui;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,12 +13,10 @@ import view.GameView;
 
 public class AbilityController {
 
-    // To make sure the ability is only triggered once per press
-    private boolean usedAbility = false;
-    private GameView gameView;
-    private Player player;
+    private final GameView gameView;
+    private final Player player;
 
-    private RectF mainAbility;
+    private final RectF mainAbility;
 
     public AbilityController(GameView gameView) {
         this.gameView = gameView;

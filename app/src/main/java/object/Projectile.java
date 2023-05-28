@@ -2,6 +2,7 @@ package object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -11,11 +12,12 @@ import view.GameView;
 
 public class Projectile extends RectF implements Runnable {
 
-    private int worldX, worldY, projectileSpeed, angle, damage;
-    private GameView gameView;
-    private Item source;
+    private int worldX, worldY;
+    private final int projectileSpeed, angle, damage;
+    private final GameView gameView;
+    private final Item source;
 
-    private Thread positionThread;
+    private final Thread positionThread;
 
     public Projectile(GameView gameView, Item source, int worldX, int worldY, int projectileSpeed, int angle, int damage) {
         this.worldX = worldX;
@@ -26,10 +28,11 @@ public class Projectile extends RectF implements Runnable {
         this.gameView = gameView;
         this.source = source;
 
-        this.left = worldX;
-        this.top = worldY;
-        this.right = worldX + gameView.TILE_SIZE/2;
-        this.bottom = worldY + gameView.TILE_SIZE/2;
+        RectF temp = gameView.getPlayer();
+        this.left = temp.left;
+        this.top = temp.top;
+        this.right = temp.right;
+        this.bottom = temp.bottom;
 
         this.positionThread = new Thread(this);
         this.positionThread.start();
@@ -41,8 +44,8 @@ public class Projectile extends RectF implements Runnable {
 
         this.left = worldX;
         this.top = worldY;
-        this.right = worldX + gameView.TILE_SIZE/2;
-        this.bottom = worldY + gameView.TILE_SIZE/2;
+        this.right = worldX + gameView.TILE_SIZE;
+        this.bottom = worldY + gameView.TILE_SIZE;
 
         Log.i("Projectile", "X: " + this.worldX + " Y: " + this.worldY);
 
@@ -53,6 +56,16 @@ public class Projectile extends RectF implements Runnable {
 
         canvas.drawBitmap(source.getImage(), point.x, point.y, paint);
 
+        /*
+        RectF hitbox = (RectF)this;
+        hitbox.left = point.x;
+        hitbox.top = point.y;
+        hitbox.right = point.x + gameView.TILE_SIZE;
+        hitbox.bottom = point.y + gameView.TILE_SIZE;
+
+        paint.setColor(Color.RED);
+        canvas.drawRect(hitbox, paint);
+        */
     }
 
     @Override
@@ -61,7 +74,7 @@ public class Projectile extends RectF implements Runnable {
             updateProjectile();
 
             try {
-                Thread.sleep((long)(1000/gameView.getCurrentFrameRate()));
+                Thread.sleep((1000/gameView.getCurrentFrameRate()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

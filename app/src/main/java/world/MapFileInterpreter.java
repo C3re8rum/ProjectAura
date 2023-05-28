@@ -23,7 +23,7 @@ public class MapFileInterpreter {
         createMapSize();
         initializeMap();
 
-        Log.d("MAP", "Created MapFileInterpreter");
+        Log.d("MapFileInterpreter", "Created MapFileInterpreter");
     }
 
     private void createMapSize() {
@@ -44,8 +44,8 @@ public class MapFileInterpreter {
             rows++;
         }
         this.map = new int[columns][rows];
-        System.out.println(rows + " " + columns);
-        System.out.println(map.length + " " + map[0].length);
+        //System.out.println(rows + " " + columns);
+        // System.out.println(map.length + " " + map[0].length);
     }
 
 
