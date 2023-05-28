@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
 
 import com.appng.projectaura.R;
@@ -76,28 +77,26 @@ public class TileManager {
 
             // The coordinate at which the tile will be drawn
             // On the screen
-            int screenX = worldX - gameView.getPlayer().getWorldX() + gameView.getPlayer().getScreenX();
-            int screenY = worldY - gameView.getPlayer().getWorldY() + gameView.getPlayer().getScreenY();
-
+            Point tileScreenPoint = gameView.getPlayer().getPositionRelativeToPlayer(worldX, worldY);
             Player player = gameView.getPlayer();
-            int playerWorldX = player.getWorldX();
-            int playerWorldY = player.getWorldY();
+            int playerWorldX = (int) player.left;
+            int playerWorldY = (int) player.top;
             int playerScreenX = player.getScreenX();
             int playerScreenY = player.getScreenY();
 
             int tileSize = gameView.TILE_SIZE;
 
-            boolean insideOfScreen = worldX + tileSize > playerWorldX - playerScreenX &&
-                                    worldX - tileSize < playerWorldX + playerScreenX &&
-                                    worldY + tileSize > playerWorldY - playerScreenY &&
-                                    worldY - tileSize < playerWorldY + playerScreenY;
+            boolean insideOfScreen = worldX + tileSize*2 > playerWorldX - playerScreenX &&
+                                    worldX - tileSize*2 < playerWorldX + playerScreenX &&
+                                    worldY + tileSize*2 > playerWorldY - playerScreenY &&
+                                    worldY - tileSize*2 < playerWorldY + playerScreenY;
 
             if (insideOfScreen) {
                 int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
 
                 Bitmap image = baseTiles[tileNumber].getImage();
 
-                canvas.drawBitmap(image, screenX, screenY, paint);
+                canvas.drawBitmap(image, tileScreenPoint.x, tileScreenPoint.y, paint);
             }
 
             worldColumn++;

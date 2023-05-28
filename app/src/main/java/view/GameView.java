@@ -56,7 +56,7 @@ public class GameView extends SurfaceView implements Runnable{
 
         this.movementController = new MovementController(this);
 
-        this.player = new Player(this,250, 250, TILE_SIZE, TILE_SIZE, 6);
+        this.player = new Player(this,TILE_SIZE*32, TILE_SIZE*32, TILE_SIZE, TILE_SIZE, 6);
 
         surfaceHolder = getHolder();
         paint = new Paint();

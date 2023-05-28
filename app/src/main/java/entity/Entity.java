@@ -1,5 +1,7 @@
 package entity;
 
+import static entity.Direction.UP;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -10,9 +12,20 @@ public abstract class Entity extends RectF {
     private int spriteNumber = 1;
     private final int spriteInterval = 12;
 
-    public Entity(int startX, int startY, int width, int height) {
+    private int movementSpeed;
+    public Direction direction = UP;
+
+    public Entity(int startX, int startY, int width, int height, int movementSpeed) {
         this.left = startX - width/2;
+        this.right = startX + width/2;
         this.top = startY + height/2;
+        this.bottom = startY - height/2;
+
+        this.movementSpeed = movementSpeed;
+    }
+
+    public int getMovementSpeed() {
+        return movementSpeed;
     }
 
     public abstract void draw(Canvas canvas, Paint paint);

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
 
 import com.appng.projectaura.MainActivity;
@@ -26,15 +27,12 @@ public class Player extends Entity{
     private GameView gameView;
 
     // Movement
-    private int movementSpeed;
-    public Direction direction = UP;
     private MovementController movementController;
 
     // Graphics
     private Bitmap imageUp1, imageUp2, imageLeft1, imageLeft2, imageRight1, imageRight2, imageDown1, imageDown2;
     private int screenX = 0;
     private int screenY = 0;
-    private int worldX, worldY;
 
     // Combat
     private int maxHealth = 100;
@@ -45,9 +43,8 @@ public class Player extends Entity{
 
 
     public Player(GameView gameView, int startX, int startY, int width, int height, int movementSpeed) {
-        super(startX, startY, width, height);
+        super(startX, startY, width, height, movementSpeed);
 
-        this.movementSpeed = movementSpeed;
         this.gameView = gameView;
         this.movementController = gameView.getMovementController();
         this.screenX = MainActivity.getScreenWidth()/2;
@@ -56,9 +53,6 @@ public class Player extends Entity{
         this.abilities = new Item[4];
 
         initializeImages();
-
-        this.worldX = gameView.TILE_SIZE*32;
-        this.worldY = gameView.TILE_SIZE*32;
 
         try {
             this.addAbility(new Firebolt(gameView, "Firebolt", 5, 3));
@@ -101,11 +95,11 @@ public class Player extends Entity{
     }
 
     public int getWorldX() {
-        return worldX;
+        return (int) (this.left - width()/2);
     }
 
     public int getWorldY() {
-        return worldY;
+        return (int) (this.top - height()/2);
     }
 
     public int getScreenX() {
@@ -160,25 +154,37 @@ public class Player extends Entity{
 
             if (left){
                     this.direction = Direction.LEFT;
-                    this.worldX += -movementSpeed;
-                }
+                    this.left += -this.getMovementSpeed();
+                    this.right += -this.getMovementSpeed();
+            }
                 if (right){
                     this.direction = Direction.RIGHT;
-                    this.worldX += movementSpeed;
+                    this.left += this.getMovementSpeed();
+                    this.right += this.getMovementSpeed();
+
                 }
                 if (up){
                     this.direction = Direction.UP;
-                    this.worldY += -movementSpeed;
+                    this.top += -this.getMovementSpeed();
+                    this.bottom += -this.getMovementSpeed();
                 }
                 if (down){
                     this.direction = Direction.DOWN;
-                    this.worldY += movementSpeed;
+                    this.top += this.getMovementSpeed();
+                    this.bottom += this.getMovementSpeed();
                 }
 
                 Log.i("Player", "Moving " + direction);
         }
 
 
+    }
+
+    public Point getPositionRelativeToPlayer(int objectWorldX, int objectWorldY){
+
+        int objectScreenX = objectWorldX - getWorldX() + screenX;
+        int objectScreenY = objectWorldY - getWorldY() + screenY;
+        return new Point(objectScreenX, objectScreenY);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -71,7 +72,7 @@ public class Firebolt extends Spell{
 
         Log.d("Firebolt", "Activated");
 
-        Projectile projectile = new Projectile(gameView, this, gameView.getPlayer().getWorldX(), gameView.getPlayer().getWorldY(), this.projectileSpeed, angle, getDamage());
+        Projectile projectile = new Projectile(gameView, this, (int) gameView.getPlayer().left-gameView.TILE_SIZE/2, (int) gameView.getPlayer().top+gameView.TILE_SIZE/2, this.projectileSpeed, angle, getDamage());
         gameView.addProjectile(projectile);
 
     }

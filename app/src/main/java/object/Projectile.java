@@ -3,6 +3,7 @@ package object;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -47,10 +48,10 @@ public class Projectile extends RectF implements Runnable {
 
     }
     public void draw(Canvas canvas, Paint paint){
-        int screenX = worldX - gameView.getPlayer().getWorldX() + gameView.getPlayer().getScreenX();
-        int screenY = worldY - gameView.getPlayer().getWorldY() + gameView.getPlayer().getScreenY();
 
-        canvas.drawBitmap(source.getImage(), screenX, screenY, paint);
+        Point point = gameView.getPlayer().getPositionRelativeToPlayer(worldX, worldY);
+
+        canvas.drawBitmap(source.getImage(), point.x, point.y, paint);
 
     }
 
