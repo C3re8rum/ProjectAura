@@ -21,14 +21,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        GameView gameView = new GameView(this);
+        Intent intent = new Intent(this, menuActivity.class);
+        startActivity(intent);
 
-        Log.i("SCREEN", "Width: " + getScreenWidth() + " Height: " + getScreenHeight());
-
-        this.setContentView(gameView);
-        // this.playBackgroundmusic(gameView);
+        //
     }
 
     public static int getScreenWidth(){
@@ -39,10 +37,5 @@ public class MainActivity extends Activity {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
-    public void playBackgroundmusic (View view) {
-        Intent intent = new Intent(MainActivity.this, BackgroundMusicService.class);
-        Log.d("createService", "Entered PlayBackgroundMusic");
-        startService(intent);
-        Log.d("createService", "Started BackgroundMusic");
-    }
+
 }

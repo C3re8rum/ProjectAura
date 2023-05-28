@@ -193,6 +193,7 @@ public class Demon extends Monster {
 
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
+        // DEBUG: Drawing hitbox
         //RectF hitBox = new RectF(drawCoordinates.x + (this.width()/2), drawCoordinates.y + (this.height()/2), drawCoordinates.x + this.width()*3/2, drawCoordinates.y + this.height()*3/2);
         // canvas.drawRect(hitBox, paint);
     }
