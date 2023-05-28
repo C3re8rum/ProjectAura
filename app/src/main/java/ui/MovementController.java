@@ -1,4 +1,4 @@
-package controller;
+package ui;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +21,7 @@ public class MovementController {
     // Visuals
     private final RectF horizontalCross, leftVerticalCross, rightVerticalCross;
 
-    private GameView gameView;
+    private final GameView gameView;
 
     public MovementController(GameView gameView) {
         this.gameView = gameView;
@@ -82,32 +82,23 @@ public class MovementController {
     public void checkCollision(int touchX, int touchY, boolean touchDown) {
         RectF touchPoint = new RectF(touchX, touchY, touchX + 1, touchY + 1);
 
+        // Log.i("MovementController", "Checking movement");
         if (this.left.contains(touchPoint)) {
-            if (touchDown) {
-                this.leftPressed = true;
-            } else {
-                this.leftPressed = false;
-            }
+            this.leftPressed = touchDown;
 
-            Log.d("CONTROLLER", "LEFT PRESSED");
+            Log.i("MovementController", "Left");
         } else if (this.right.contains(touchPoint)) {
-            if (touchDown) {
-                this.rightPressed = true;
-            } else {
-                this.rightPressed = false;
-            }
+            this.rightPressed = touchDown;
+
+            Log.i("MovementController", "Right");
         } else if (this.up.contains(touchPoint)) {
-            if (touchDown) {
-                this.upPressed = true;
-            } else {
-                this.upPressed = false;
-            }
+            this.upPressed = touchDown;
+            Log.i("MovementController", "Up");
+
         } else if (this.down.contains(touchPoint)) {
-            if (touchDown) {
-                this.downPressed = true;
-            } else {
-                this.downPressed = false;
-            }
+            this.downPressed = touchDown;
+            Log.i("MovementController", "Down");
+
         }
 
         if (!touchDown) {

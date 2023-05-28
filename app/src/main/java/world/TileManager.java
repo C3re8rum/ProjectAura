@@ -4,10 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
 
 import com.appng.projectaura.R;
 
+import entity.Player;
 import view.GameView;
 
 public class TileManager {
@@ -75,16 +77,27 @@ public class TileManager {
 
             // The coordinate at which the tile will be drawn
             // On the screen
-            int screenX = worldX - gameView.getPlayer().getWorldX() + gameView.getPlayer().getScreenX();
-            int screenY = worldY - gameView.getPlayer().getWorldY() + gameView.getPlayer().getScreenY();
+            Point tileScreenPoint = gameView.getPlayer().getPositionRelativeToPlayer(worldX, worldY);
+            Player player = gameView.getPlayer();
+            int playerWorldX = (int) player.left;
+            int playerWorldY = (int) player.top;
+            int playerScreenX = player.getScreenX();
+            int playerScreenY = player.getScreenY();
 
-            // Log.d("TILE_CORDS_SCREEN", "X: " + screenX + " Y: " + screenY);
+            int tileSize = gameView.TILE_SIZE;
 
-            int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
+            boolean insideOfScreen = worldX + tileSize*2 > playerWorldX - playerScreenX &&
+                                    worldX - tileSize*2 < playerWorldX + playerScreenX &&
+                                    worldY + tileSize*2 > playerWorldY - playerScreenY &&
+                                    worldY - tileSize*2 < playerWorldY + playerScreenY;
 
-            Bitmap image = baseTiles[tileNumber].getImage();
+            if (insideOfScreen) {
+                int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
 
-            canvas.drawBitmap(image, screenX, screenY, paint);
+                Bitmap image = baseTiles[tileNumber].getImage();
+
+                canvas.drawBitmap(image, tileScreenPoint.x, tileScreenPoint.y, paint);
+            }
 
             worldColumn++;
             if (worldColumn == gameView.WORLD_GRID_WIDTH) {
@@ -92,7 +105,6 @@ public class TileManager {
                 worldRow++;
 
             }
-            // Log.i("WORLD", "DRAWING WORLD");
         }
     }
 }
