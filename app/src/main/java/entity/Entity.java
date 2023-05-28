@@ -28,7 +28,7 @@ public abstract class Entity extends RectF {
     public void updateSpriteCounter(){
         this.spriteCounter++;
 
-        if (this.spriteCounter == 12){
+        if (this.spriteCounter == spriteInterval){
             if (this.spriteNumber == 1){
                 this.spriteNumber = 2;
             } else {

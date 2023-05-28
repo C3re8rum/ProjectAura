@@ -13,23 +13,36 @@ import android.util.Log;
 import com.appng.projectaura.MainActivity;
 import com.appng.projectaura.R;
 
+import java.util.ArrayList;
+
 import controller.MovementController;
+import exceptions.SpellLevelException;
+import object.Firebolt;
+import object.Item;
 import view.GameView;
 
 public class Player extends Entity{
 
-    private Bitmap imageUp1, imageUp2, imageLeft1, imageLeft2, imageRight1, imageRight2, imageDown1, imageDown2;
-    private int movementSpeed;
-
     private GameView gameView;
+
+    // Movement
+    private int movementSpeed;
+    public Direction direction = UP;
     private MovementController movementController;
 
+    // Graphics
+    private Bitmap imageUp1, imageUp2, imageLeft1, imageLeft2, imageRight1, imageRight2, imageDown1, imageDown2;
     private int screenX = 0;
     private int screenY = 0;
-
     private int worldX, worldY;
 
-    public Direction direction = UP;
+    // Combat
+    private int maxHealth = 100;
+    private int currentHealth = maxHealth;
+    private Item[] abilities;
+    private final static int globalCoolDownMilliSeconds = 500;
+    private long timeSinceLastUsedAbility = 0;
+
 
     public Player(GameView gameView, int startX, int startY, int width, int height, int movementSpeed) {
         super(startX, startY, width, height);
@@ -40,11 +53,51 @@ public class Player extends Entity{
         this.screenX = MainActivity.getScreenWidth()/2;
         this.screenY = MainActivity.getScreenHeight()/2;
 
+        this.abilities = new Item[4];
+
         initializeImages();
 
         this.worldX = gameView.TILE_SIZE*32;
         this.worldY = gameView.TILE_SIZE*32;
 
+        try {
+            this.addAbility(new Firebolt(gameView, "Firebolt", 5, 3));
+        } catch (SpellLevelException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addAbility(Item item){
+        int index = 0;
+        // Find the first empty spot in list
+        while(this.abilities[index] != null && index < 4){
+            index++;
+        }
+        // TODO: Implement behaviour for full ability-list;
+        if (index == 4 ){
+            return;
+        }
+
+        this.abilities[index] = item;
+
+    }
+
+    public void useAbility(int index){
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - timeSinceLastUsedAbility < globalCoolDownMilliSeconds){
+            return;
+        }
+
+        Item item = abilities[index];
+        item.activate();
+        Log.i("PlayerAbility", item.toString());
+        timeSinceLastUsedAbility = currentTime;
+    }
+
+    public Item getAbility(int index){
+        return abilities[index];
     }
 
     public int getWorldX() {
@@ -100,6 +153,8 @@ public class Player extends Entity{
         boolean up = movementController.isUpPressed();
         boolean down = movementController.isDownPressed();
 
+        Log.d("PlayerMovement", left + " " + right + " " + " " + up + " " + down);
+
         if ( left || right || up || down ) {
             this.updateSpriteCounter();
 
@@ -119,6 +174,8 @@ public class Player extends Entity{
                     this.direction = Direction.DOWN;
                     this.worldY += movementSpeed;
                 }
+
+                Log.i("Player", "Moving " + direction);
         }
 
 

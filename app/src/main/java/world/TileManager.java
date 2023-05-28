@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.appng.projectaura.R;
 
+import entity.Player;
 import view.GameView;
 
 public class TileManager {
@@ -78,13 +79,26 @@ public class TileManager {
             int screenX = worldX - gameView.getPlayer().getWorldX() + gameView.getPlayer().getScreenX();
             int screenY = worldY - gameView.getPlayer().getWorldY() + gameView.getPlayer().getScreenY();
 
-            // Log.d("TILE_CORDS_SCREEN", "X: " + screenX + " Y: " + screenY);
+            Player player = gameView.getPlayer();
+            int playerWorldX = player.getWorldX();
+            int playerWorldY = player.getWorldY();
+            int playerScreenX = player.getScreenX();
+            int playerScreenY = player.getScreenY();
 
-            int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
+            int tileSize = gameView.TILE_SIZE;
 
-            Bitmap image = baseTiles[tileNumber].getImage();
+            boolean insideOfScreen = worldX + tileSize > playerWorldX - playerScreenX &&
+                                    worldX - tileSize < playerWorldX + playerScreenX &&
+                                    worldY + tileSize > playerWorldY - playerScreenY &&
+                                    worldY - tileSize < playerWorldY + playerScreenY;
 
-            canvas.drawBitmap(image, screenX, screenY, paint);
+            if (insideOfScreen) {
+                int tileNumber = mapFileInterpreter.getCell(worldColumn, worldRow);
+
+                Bitmap image = baseTiles[tileNumber].getImage();
+
+                canvas.drawBitmap(image, screenX, screenY, paint);
+            }
 
             worldColumn++;
             if (worldColumn == gameView.WORLD_GRID_WIDTH) {
@@ -92,7 +106,6 @@ public class TileManager {
                 worldRow++;
 
             }
-            // Log.i("WORLD", "DRAWING WORLD");
         }
     }
 }
