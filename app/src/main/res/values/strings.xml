@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ProjectAura</string>
+    <string name="about">
+        Project Aura is a single player 2D-RPG which utilizes a custom game map. The player controls
+        a single character in the form of "Blue Boy" which at the moment can only walk around and use
+        his magic to sling fire.
+    </string>
 </resources>

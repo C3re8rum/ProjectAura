@@ -41,6 +41,10 @@ public abstract class Entity extends RectF implements Runnable{
         return maxHealth;
     }
 
+    public int getSpriteInterval() {
+        return spriteInterval;
+    }
+
     public Point getMiddle(){
         int x = (int) (this.left + this.width());
         int y = (int) (this.top + this.height());

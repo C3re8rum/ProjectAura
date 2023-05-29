@@ -49,7 +49,7 @@ public class Player extends Entity{
         initializeImages();
 
         try {
-            this.addAbility(new Firebolt(gameView, "Firebolt", 20, 4));
+            this.addAbility(new Firebolt(gameView, "Firebolt", 25, 7));
         } catch (SpellLevelException e) {
             e.printStackTrace();
         }
@@ -129,6 +129,12 @@ public class Player extends Entity{
         this.imageRight2 = BitmapFactory.decodeResource(gameView.getContext().getResources(), R.drawable.boyright2);
         this.imageRight2 = Bitmap.createScaledBitmap(imageRight2, gameView.TILE_SIZE, gameView.TILE_SIZE, true);
 
+    }
+
+    @Override
+    public void damage(int amount){
+        super.damage(amount);
+        Log.i("Player", "HP: " + gameView.getPlayer().getCurrentHealth());
     }
 
     @Override
@@ -249,6 +255,7 @@ public class Player extends Entity{
 
         canvas.drawBitmap(playerImage, screenX, screenY, paint);
     }
+
 
     @Override
     public void run() {

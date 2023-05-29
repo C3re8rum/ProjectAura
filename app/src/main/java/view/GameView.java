@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 
 import com.appng.projectaura.YouDiedActivity;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -23,6 +24,7 @@ import entity.Demon;
 import entity.Entity;
 import entity.Player;
 import object.Projectile;
+import ui.PlayerStatViewer;
 import world.TileManager;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -36,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
     // User interface
     private final MovementController movementController;
     private final AbilityController abilityController;
+    private final PlayerStatViewer playerStatViewer;
 
     // Tile constants
     public final int BASE_TILE_SIZE = 16;
@@ -48,9 +51,9 @@ public class GameView extends SurfaceView implements Runnable {
     // World
     private final TileManager tileManager;
     private final Player player;
-    private final ArrayList<Projectile> activeProjectiles;
+    private ArrayList<Projectile> activeProjectiles;
     private final ArrayList<Projectile> projectilesToRemove;
-    private final ArrayList<Entity> nonPlayerCharacters;
+    private ArrayList<Entity> nonPlayerCharacters;
 
     // Options
     private int difficultyConstant;
@@ -85,7 +88,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.movementController = new MovementController(this);
 
-        this.player = new Player(this, 100, TILE_SIZE * 32, TILE_SIZE * 32, TILE_SIZE, TILE_SIZE, 15);
+        this.player = new Player(this, 400, TILE_SIZE * 32, TILE_SIZE * 32, TILE_SIZE, TILE_SIZE, 15);
 
         surfaceHolder = getHolder();
         paint = new Paint();
@@ -94,6 +97,7 @@ public class GameView extends SurfaceView implements Runnable {
         initializeMonsters();
 
         this.abilityController = new AbilityController(this);
+        this.playerStatViewer = new PlayerStatViewer(this);
 
         paintThread = new Thread(this);
         paintThread.start();
@@ -163,8 +167,14 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (player.getCurrentHealth() == 0){
             paintThread.interrupt();
+            Thread.currentThread().interrupt();
+
+            activeProjectiles = new ArrayList<>();
+            nonPlayerCharacters = new ArrayList<>();
+
             Intent intent = new Intent(getContext(), YouDiedActivity.class);
             getContext().startActivity(intent);
+
         }
 
     }
@@ -172,11 +182,8 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkForCharacterDeaths() {
         synchronized (nonPlayerCharacters) {
             nonPlayerCharacters.removeIf(entity -> entity.getCurrentHealth() == 0);
-            for (Projectile p : projectilesToRemove) {
-                activeProjectiles.remove(p);
-
-            }
         }
+
     }
 
     private void handleProjectileCollisions() {
@@ -200,6 +207,12 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
         }
+        synchronized (activeProjectiles){
+            for (Projectile p : projectilesToRemove) {
+                activeProjectiles.remove(p);
+            }
+        }
+
     }
 
     public ArrayList<Projectile> getActiveProjectiles() {
@@ -220,7 +233,10 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void addNonPlayerCharacter(Entity entity) {
-        nonPlayerCharacters.add(entity);
+        synchronized (nonPlayerCharacters){
+            nonPlayerCharacters.add(entity);
+        }
+
     }
 
     public int getCurrentFrameRate() {
@@ -264,6 +280,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.movementController.draw(canvas, paint);
         this.abilityController.draw(canvas, paint);
+        this.playerStatViewer.draw(canvas, paint);
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }

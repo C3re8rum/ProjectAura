@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.SeekBar;
 
 public class OptionsActivity extends Activity {
 
     private RadioButton btnEasy, btnNormal, btnHard;
+    private SeekBar soundBar;
 
     private SharedPreferences preferences;
     private String sharedPrefFile = "com.appng.projectaura";
@@ -27,44 +27,47 @@ public class OptionsActivity extends Activity {
         this.btnEasy = (RadioButton) findViewById(R.id.rbtnEasy);
         this.btnNormal = (RadioButton) findViewById(R.id.rbtnNormal);
         this.btnHard = (RadioButton) findViewById(R.id.rbtnHard);
+        this.soundBar = (SeekBar) findViewById(R.id.barSoundLevel);
 
-        updateRadioButtons();
+        readData();
     }
 
-    private void updateRadioButtons() {
+    private void readData() {
         String currentlyChecked = preferences.getString("Difficulty", "EASY");
 
-        switch (currentlyChecked){
+        switch (currentlyChecked) {
             case "EASY":
-                if (!btnEasy.isChecked()){
+                if (!btnEasy.isChecked()) {
                     btnEasy.toggle();
                 }
                 break;
             case "NORMAL":
-                if (!btnNormal.isChecked()){
+                if (!btnNormal.isChecked()) {
                     btnNormal.toggle();
                 }
                 break;
             case "HARD":
-                if (!btnHard.isChecked()){
+                if (!btnHard.isChecked()) {
                     btnHard.toggle();
                 }
                 break;
         }
+
+        int volume = preferences.getInt("SOUNDLEVEL", 25);
+        soundBar.setProgress(volume);
     }
 
-    public void updateDifficulty(){
+    public void updateDifficulty() {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         String difficulty = "";
 
-        if (btnEasy.isChecked()){
+        if (btnEasy.isChecked()) {
             difficulty = "EASY";
-        } else if(btnNormal.isChecked()){
+        } else if (btnNormal.isChecked()) {
             difficulty = "NORMAL";
-        } else if (btnHard.isChecked()){
+        } else if (btnHard.isChecked()) {
             difficulty = "HARD";
         }
-
 
         preferencesEditor.putString("Difficulty", difficulty);
         preferencesEditor.apply();
@@ -72,8 +75,17 @@ public class OptionsActivity extends Activity {
 
     }
 
-    public void goToMenu(View view){
+    public void updateSoundLevel() {
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        SeekBar seekBar = findViewById(R.id.barSoundLevel);
+        int soundLevel = seekBar.getProgress();
+        preferencesEditor.putInt("SOUNDLEVEL", soundLevel);
+        preferencesEditor.apply();
+    }
+
+    public void goToMenu(View view) {
         updateDifficulty();
+        updateSoundLevel();
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }

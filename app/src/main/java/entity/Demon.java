@@ -37,7 +37,7 @@ public class Demon extends Monster {
     // Timing
     private final long timeBetweenMovesMilliSeconds = 2000;
     private long lastMoveTime = 0;
-    private final Thread updateThread;
+    private Thread updateThread;
 
     // Combat
     private final int damageConstant = 10;
@@ -141,8 +141,16 @@ public class Demon extends Monster {
         }
         status = ATTACKING;
         moving = false;
+        // Log.d("Demon", "Sprite: " + this.getSpriteCounter());
+        if (this.getSpriteCounter() == 12 && this.getCurrentHealth() != 0){
+            gameView.getPlayer().damage(this.damageConstant*level);
+            // Log.i("Demon", "Damage done to player: " + this.damageConstant*level);
+        }
 
-        gameView.getPlayer().damage(this.damageConstant*level);
+        if (this.getSpriteCounter() == this.getSpriteInterval()){
+            status = IDLE;
+            moving = true;
+        }
 
     }
 
@@ -151,11 +159,6 @@ public class Demon extends Monster {
         getImage();
 
         Point drawCoordinates = gameView.getPlayer().getPositionRelativeToPlayer((int) this.left, (int) this.top);
-        // Log.d("Demon", "X: " + drawCoordinates.x + " Y: " + drawCoordinates.y);
-        // Maybe needs to optimise if outside of screen, shouldn't be needed
-
-        // Log.d("Demon", "DrawCords: " + drawCoordinates.toString());
-
         canvas.drawBitmap(currentImage, drawCoordinates.x, drawCoordinates.y, paint);
 
         // Health bar
@@ -209,6 +212,13 @@ public class Demon extends Monster {
             lastMoveTime = currentTime;
         }
 
+        if (playerWithinRange()){
+            attack();
+        } else {
+            moving = true;
+            status = IDLE;
+        }
+
         if (moving){
             this.updatePosition();
         }
@@ -226,7 +236,7 @@ public class Demon extends Monster {
 
         double playerDistance = Math.sqrt(Math.pow(distanceX,2 ) + Math.pow(distanceY,2));
         // Log.d("Demon", "Distance to player: " + playerDistance);
-        if (playerDistance > 800){
+        if (playerDistance > 400*this.level){
             generateRandomMove();
             return;
         }
@@ -243,14 +253,8 @@ public class Demon extends Monster {
             direction = Direction.DOWN;
         }
 
-        // Log.d("Demon", "Angle: " + playerAngle + " Direction: " + direction);
+        // Log.i("Demon", "SpriteGeneral: " + this.getSpriteCounter());
 
-        if (playerWithinRange()){
-            attack();
-        } else {
-            moving = true;
-            status = IDLE;
-        }
 
     }
 
@@ -263,7 +267,7 @@ public class Demon extends Monster {
         int deltaY = playerPoint.y - demonPoint.y;
         // Log.d("DemonDistance", deltaX + " " + deltaY);
 
-        int range = gameView.TILE_SIZE*1;
+        int range = (int)(gameView.TILE_SIZE*1.5);
 
         boolean inRangeLeft = deltaX > -range;
         boolean inRangeRight = deltaX < range;
@@ -296,7 +300,7 @@ public class Demon extends Monster {
 
     @Override
     public void run() {
-        while (!Thread.interrupted()){
+        while (!Thread.currentThread().isInterrupted()){
             int FPS = gameView.getCurrentFrameRate();
 
             update();
@@ -309,4 +313,5 @@ public class Demon extends Monster {
 
         }
     }
+
 }

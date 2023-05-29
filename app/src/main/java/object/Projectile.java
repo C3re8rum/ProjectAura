@@ -17,7 +17,8 @@ public class Projectile extends RectF implements Runnable {
     private final GameView gameView;
     private final Item source;
 
-    private final Thread positionThread;
+    private Thread positionThread;
+    private boolean killThread = false;
 
     public Projectile(GameView gameView, Item source, int worldX, int worldY, int projectileSpeed, int angle, int damage) {
         this.worldX = worldX;
@@ -47,7 +48,7 @@ public class Projectile extends RectF implements Runnable {
         this.right = worldX + gameView.TILE_SIZE;
         this.bottom = worldY + gameView.TILE_SIZE;
 
-        Log.i("Projectile", "X: " + this.worldX + " Y: " + this.worldY);
+        // Log.i("Projectile", "X: " + this.worldX + " Y: " + this.worldY);
 
     }
     public void draw(Canvas canvas, Paint paint){
@@ -79,6 +80,10 @@ public class Projectile extends RectF implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void interruptThread(){
+        positionThread.interrupt();
     }
 
     public int getDamage(){
