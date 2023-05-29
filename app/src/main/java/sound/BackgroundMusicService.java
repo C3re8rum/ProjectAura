@@ -17,6 +17,8 @@ public class BackgroundMusicService extends Service{
     private String sharedPrefFile =
             "com.appng.projectaura";
 
+    public static int volume;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,6 +37,13 @@ public class BackgroundMusicService extends Service{
         Log.d("createService", mediaPlayer.toString());
 
         mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(volume, volume);
+    }
+
+    public void updateVolume(){
+        preferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        volume = preferences.getInt("SOUNDLEVEL", 25);
+
         mediaPlayer.setVolume(volume, volume);
     }
 

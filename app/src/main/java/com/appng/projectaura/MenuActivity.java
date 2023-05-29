@@ -3,6 +3,7 @@ package com.appng.projectaura;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,7 @@ public class MenuActivity extends Activity {
     public void startGame(View view){
         String difficulty = preferences.getString("Difficulty", "EASY");
         GameView gameView = new GameView(this, difficulty);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.setContentView(gameView);
         this.playBackgroundMusic(gameView);
     }
